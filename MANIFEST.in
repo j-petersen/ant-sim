@@ -1,0 +1,2 @@
+# Include additional files in the package
+include README.md LICENSE
