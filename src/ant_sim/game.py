@@ -56,7 +56,6 @@ class Game:
             self.handle_events()
             self.update(dt)
             self.render()
-            self.clock.tick(self.fps)
 
         self.cleanup()
 

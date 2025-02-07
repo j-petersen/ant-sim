@@ -24,7 +24,7 @@ class Ant:
         x: float = 0.0,
         y: float = 0.0,
         theta: float = 0.0,
-        speed: float = 500,
+        speed: float = 200,
 
     ):
         self.x = x
