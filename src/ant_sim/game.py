@@ -1,30 +1,31 @@
 """Main module which holds the game class and runs it."""
+
 import logging
 
 import pygame
 from ant import Ant
+from src.ant_sim.board import Board
 
 
 class Game:
     def __init__(self, title: str, width: int, height: int, fps: int) -> None:
         """Initialize the game class with essential parameters."""
         self.title = title
-        self.width = width
-        self.height = height
+        self.board = Board(width, height)
         self.fps = fps
-        self.ant = Ant()
+        self.num_ants = 10_000
+
+        self.running = True
         self._initial_setup()
 
     def _initial_setup(self) -> None:
         """Create pygame specific attributes."""
         pygame.init()
-
-        self.screen = pygame.display.set_mode((self.width, self.height))
+        self.screen = pygame.display.set_mode((self.board.width, self.board.height))
         pygame.display.set_caption(self.title)
-
         self.clock = pygame.time.Clock()
 
-        self.running = True
+        self.ants = Ant.initialize_ants_circle(self.num_ants, board=self.board)
 
     def handle_events(self) -> None:
         """Handle all events, such as key presses and mouse clicks."""
@@ -38,13 +39,14 @@ class Game:
 
     def update(self, dt: float) -> None:
         """Update the game state. Override this method in subclasses."""
-        self.ant.update(dt)
+        for ant in self.ants:
+            ant.update(dt, self.board)
 
     def render(self) -> None:
         """Render all game objects to the screen. Override this method in subclasses."""
-        logging.debug('Rendering game state')
         self.screen.fill((0, 0, 0))  # Clear screen with black
-        self.ant.render(self.screen)
+        for ant in self.ants:
+            ant.render(self.screen)
         pygame.display.flip()
 
     def run(self) -> None:
@@ -58,7 +60,8 @@ class Game:
 
         self.cleanup()
 
-    def cleanup(self) -> None:
+    @staticmethod
+    def cleanup() -> None:
         """Cleanup resources before exiting the game."""
         pygame.quit()
         raise SystemExit("Game was terminated")
@@ -67,5 +70,5 @@ class Game:
 # Example usage
 if __name__ == "__main__":
     logging.basicConfig(level=logging.DEBUG)
-    game = Game(title="Ant Simulation", width=1280, height=720, fps=60)
+    game = Game(title="Ant Simulation", width=1280, height=1280, fps=60)
     game.run()
