@@ -1,12 +1,18 @@
 """Implementation of the Ants."""
 
-import logging
 from typing import Self
+from pathlib import Path
 
 import numpy as np
 import pygame
 
 from ant_sim.board import Board
+
+# Credits to sebastian lague to inspire this project and the creator of this sprite
+# https://github.com/SebLague/Ant-Simulation/blob/main/Assets/Graphics/Ant%20sprite.png
+
+SPRITE_PATH = Path(__file__).parent.parent.parent / 'sprite'
+ANT_SPRITE = pygame.image.load(SPRITE_PATH / 'ant.png')
 
 
 class Ant:
@@ -39,13 +45,11 @@ class Ant:
 
         self.theta = np.arctan2(dy, dx)
 
-    def render(self, screen: pygame.Surface, size: int = 20) -> None:
-        pygame.draw.circle(
-            screen,
-            (255, 255, 255),
-            (self.x, self.y),
-            size,
-        )
+    def render(self, screen: pygame.Surface) -> None:
+        # angle in deg and clockwise and not mathematical
+        img = pygame.transform.rotozoom(ANT_SPRITE, np.rad2deg(-self.theta), 0.1)
+        rect = img.get_rect(center=(self.x, self.y))
+        screen.blit(img, rect.topleft)
 
     @classmethod
     def initialize_ants_circle(cls, number: int, board: Board) -> list[Self]:

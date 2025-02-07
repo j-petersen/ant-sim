@@ -13,7 +13,7 @@ class Game:
         self.title = title
         self.board = Board(width, height)
         self.fps = fps
-        self.num_ants = 10_000
+        self.num_ants = 16
 
         self.running = True
         self._initial_setup()
@@ -44,7 +44,7 @@ class Game:
 
     def render(self) -> None:
         """Render all game objects to the screen. Override this method in subclasses."""
-        self.screen.fill((0, 0, 0))  # Clear screen with black
+        self.screen.fill((255, 255, 255))
         for ant in self.ants:
             ant.render(self.screen)
         pygame.display.flip()
